@@ -59,9 +59,7 @@ def line():
 
 def current_time():
   e = datetime.datetime.now()
-  time_now = "%s:%s:%s" % (e.hour, e.minute, e.second)
-
-  return(time_now)
+  return f"{e.hour}:{e.minute}:{e.second}"
 
 def banner():
   print('''
@@ -101,24 +99,22 @@ def external_search(phone_number):
   data = tbl[0].find('tfoot')
   c=0
   for i in data:
-      c+=1
-      if c in (1,4,6,8):
-          continue
-      th = i.find('th')
-      td = i.find('td')
-      try:
-        print('[+]',th.text,td.text)
-      except AttributeError:
-        pass
+    c+=1
+    if c in {1, 4, 6, 8}:
+      continue
+    th = i.find('th')
+    td = i.find('td')
+    try:
+      print('[+]',th.text,td.text)
+    except AttributeError:
+      pass
 
   data = tbl[1].find('tfoot')
-  c=0
-  for i in data:
-      c+=1
-      if c in (2,20,22,26): 
-          th = i.find('th')
-          td = i.find('td')
-          print('[+]',th.text,td.text)
+  for c, i in enumerate(data, start=1):
+    if c in {2, 20, 22, 26}: 
+      th = i.find('th')
+      td = i.find('td')
+      print('[+]',th.text,td.text)
 
 #==============================================
 
