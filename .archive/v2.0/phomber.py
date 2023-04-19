@@ -62,9 +62,7 @@ def line():
 
 def current_time():
   e = datetime.datetime.now()
-  time_now = "%s:%s:%s" % (e.hour, e.minute, e.second)
-
-  return(time_now)
+  return f"{e.hour}:{e.minute}:{e.second}"
 
 def banner():
   print('''
@@ -104,30 +102,28 @@ def external_search(phone_number):
   data = tbl[0].find('tfoot')
   c=0
   for i in data:
-      c+=1
-      if c in (1,4,6,8):
-          continue
-      th = i.find('th')
-      td = i.find('td')
-      try:
-        print('[+]',th.text,td.text)
-      except AttributeError:
-        pass
+    c+=1
+    if c in {1, 4, 6, 8}:
+      continue
+    th = i.find('th')
+    td = i.find('td')
+    try:
+      print('[+]',th.text,td.text)
+    except AttributeError:
+      pass
 
   data = tbl[1].find('tfoot')
-  c=0
-  for i in data:
-      c+=1
-      if c in (2,20,22,26): 
-          th = i.find('th')
-          td = i.find('td')
-          print('[+]',th.text,td.text)
+  for c, i in enumerate(data, start=1):
+    if c in {2, 20, 22, 26}: 
+      th = i.find('th')
+      td = i.find('td')
+      print('[+]',th.text,td.text)
 
 #==============================================
 
 def phoneinfoga_scan(phone_number):
 
-  if phoneinfoga_key == 'Y' or phoneinfoga_key == 'y' :
+  if phoneinfoga_key in ['Y', 'y']:
     
     try:
       if os.path.isfile('./phoneinfoga'):
@@ -141,12 +137,11 @@ def phoneinfoga_scan(phone_number):
         try:
           if os.path.isfile('./phoneinfoga.sh'):
             os.system('bash phoneinfoga.sh')
-          else:
-            if os.path.isfile('./phoneinfoga.bat'):
-              os.system('./phoneinfoga.bat')
+          elif os.path.isfile('./phoneinfoga.bat'):
+            os.system('./phoneinfoga.bat')
           print()
           print()
-          
+
           try:
             command = f'./phoneinfoga scan -n {phone_number}'
             os.system(command)  
@@ -189,16 +184,17 @@ def getting_details():
 
   # Validating a phone number
   valid = phonenumbers.is_valid_number(phone_number_details)
-    
+
   # Checking possibility of a number
   possible = phonenumbers.is_possible_number(phone_number_details)
 
   if valid == True and possible == True:
 
-    print();line()
+    print()
+    line()
     print('[$] Basic Results')
     line()
-    
+
     # Creating a phone number variable for country
     counrty_number = phonenumbers.parse(phone_number,'CH')
 
@@ -234,7 +230,7 @@ def getting_details():
         lat = results[0]['geometry']['lat']
         lng = results[0]['geometry']['lng']
 
-        google_maps_link = "https://www.google.com/maps/place/"+lat+","+lng
+        google_maps_link = f"https://www.google.com/maps/place/{lat},{lng}"
 
         print('[+] Latitude          : ', lat)
         print('[+] Longutude         : ', lng)
@@ -247,9 +243,9 @@ def getting_details():
     else:
       print("\n[-] Enter API key in 'config.py'")
       print("[-] Instructions are givien in config file.")
-      
 
-  else :
+
+  else:
     print('[!] Invalid Number Detected')
     line()
     sys.exit()
